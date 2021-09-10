@@ -1,4 +1,8 @@
 apply plugin: 'com.android.library'
+apply plugin: 'maven-publish'
+
+group = 'com.github.axen1314'
+version = 'v1.0.0'
 
 android {
     compileSdkVersion 30
@@ -27,4 +31,18 @@ android {
 
 dependencies {
     compileOnly 'io.flutter:flutter_embedding_debug:1.0.0-0fdb562ac8068ce3dda6b69aca3f355f4d1d2718'
+}
+
+afterEvaluate {
+    publishing {
+        publications {
+            // Creates a Maven publication called "release".
+            release(MavenPublication) {
+                from components.release
+                groupId = 'com.github.axen1314'
+                artifactId = 'flutter_texture_plugin'
+                version = 'v1.0.0'
+            }
+        }
+    }
 }
