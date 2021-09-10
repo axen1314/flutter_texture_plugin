@@ -37,7 +37,7 @@ public class ExamplePlugin extends FlutterTexturePlugin implements FlutterPlugin
     }
 }
 ```
-注意：**插件一定要实现FlutterPlugin接口，否则会执行`pub get`时会出现升级V2 Plugin Api的警告！**
+注意：**插件一定要实现FlutterPlugin接口，否则执行`pub get`时会出现升级V2 Plugin Api的警告！**
 
 # 渲染器
 
