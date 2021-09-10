@@ -24,10 +24,10 @@ public class ExamplePlugin extends FlutterTexturePlugin {
 
 渲染器实现了外接纹理的渲染逻辑，插件默认实现了一些渲染器：
 
-|:-----:|:-----:|
-|渲染器|说明|
-|SurfaceBitmapRenderer|使用Surface作为纹理载体，将一个Bitmap对象渲染到外接纹理上|
-|SurfaceDrawableRenderer|使用Surface作为纹理载体，将一个Drawable对象渲染到外接纹理上|
+| :-----: | :-----: |
+| 渲染器 | 说明 |
+| SurfaceBitmapRenderer | 使用Surface作为纹理载体，将一个Bitmap对象渲染到外接纹理上 |
+| SurfaceDrawableRenderer | 使用Surface作为纹理载体，将一个Drawable对象渲染到外接纹理上 |
 
 如果需要自定义渲染器，可参考[源码](library/src/main/java/org/axen/flutter/texture/renderer/SurfaceBitmapRenderer.java)继承`AbstractImageRenderer`类
 
@@ -67,14 +67,14 @@ public class GlideProvider implements ImageProvider<Bitmap> {
 
 `NativeImage`是一个实体类，封装从Flutter层传入的基本纹理信息：
 
-|:-----:|:-----:|:-----|
-|参数名|类型|说明|
-|source|Object|渲染对象，可以是网络链接、Drawable资源ID、Asset资源名称和文件路径|
-|sourceType|SourceType|渲染对象类型，NETWORK: 网络链接 DRAWABLE: Drawable资源 ASSET: Asset资源 FILE: 文件|
-|width|Double|纹理宽度|
-|height|Double|纹理高度|
-|scaleRatio|Double|纹理放大系数，默认是3.0|
-|fit|BoxFit|纹理缩放模式，FILL: 填充 COVER: 覆盖 CONTAIN: 包含 FIT_WIDTH: 宽度自适应 FIT_HEIGHT: 高度自适应 SCALE_DOWN: 缩放 NONE: 无|
+| :-----: | :-----: | :----- |
+| 参数名 | 类型 | 说明 |
+| source | Object | 渲染对象，可以是网络链接、Drawable资源ID、Asset资源名称和文件路径 |
+| sourceType | SourceType | 渲染对象类型，NETWORK: 网络链接 DRAWABLE: Drawable资源 ASSET: Asset资源 FILE: 文件 |
+| width | Double | 纹理宽度 |
+| height | Double | 纹理高度 | 
+| scaleRatio | Double | 纹理放大系数，默认是3.0 |
+| fit | BoxFit | 纹理缩放模式，FILL: 填充 COVER: 覆盖 CONTAIN: 包含 FIT_WIDTH: 宽度自适应 FIT_HEIGHT: 高度自适应 SCALE_DOWN: 缩放 NONE: 无 |
 
 从Flutter层传入纹理信息时，参数名和参数类型需要与文档描述一致
 
