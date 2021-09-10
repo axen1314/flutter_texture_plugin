@@ -25,7 +25,7 @@ dependencies {
 创建一个Flutter Plugin项目，然后将插件类的父类改为`FlutterTexturePlugin`类，实现父类的getImageRenderer方法和getChannel方法：
 
 ```java
-public class ExamplePlugin extends FlutterTexturePlugin {
+public class ExamplePlugin extends FlutterTexturePlugin implements FlutterPlugin {
     @Override
     protected ImageRenderer getImageRenderer(Context context, TextureRegistry.SurfaceTextureEntry entry, SourceType sourceType) {
         return new SurfaceBitmapRenderer(entry, new GlideProvider(context));
@@ -37,6 +37,7 @@ public class ExamplePlugin extends FlutterTexturePlugin {
     }
 }
 ```
+注意：**插件一定要实现FlutterPlugin接口，否则会执行`pub get`时出现升级V2 Plugin Api的警告！**
 
 # 渲染器
 
