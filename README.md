@@ -2,6 +2,24 @@
 
 FlutterTexturePlugin是基于渲染器的外接纹理插件，使用不同的渲染器可各种外接纹理效果
 
+# Getting Started
+
+在插件的Android模块的build.gradle里，添加如下配置:
+```groovy
+
+rootProject.allprojects {
+    repositories {
+        maven { url 'https://jitpack.io' }
+    }
+}
+
+dependencies {
+    implementation 'com.github.axen1314:flutter_texture_plugin:v1.0.0'
+}
+
+```
+
+
 # 基本使用
 
 创建一个Flutter Plugin项目，然后将插件类的父类改为`FlutterTexturePlugin`类，实现父类的getImageRenderer方法和getChannel方法：
