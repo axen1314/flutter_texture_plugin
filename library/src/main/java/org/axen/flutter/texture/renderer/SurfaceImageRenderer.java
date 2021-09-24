@@ -16,11 +16,11 @@ import java.util.Map;
 import io.flutter.plugin.common.MethodChannel;
 import io.flutter.view.TextureRegistry;
 
-public abstract class SurfaceImageRenderer<T> extends AbstractImageRenderer<T> {
+public abstract class SurfaceImageRenderer<T> extends NativeImageRenderer<T> {
 
     public SurfaceImageRenderer(
             TextureRegistry.SurfaceTextureEntry textureEntry,
-            ImageProvider<T> provider
+            ImageProvider<T, NativeImage> provider
     ) {
         super(textureEntry, provider);
     }

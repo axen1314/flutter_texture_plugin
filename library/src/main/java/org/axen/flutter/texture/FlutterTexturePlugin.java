@@ -9,39 +9,13 @@ import org.axen.flutter.texture.constant.SourceType;
 import org.axen.flutter.texture.entity.NativeImage;
 import org.axen.flutter.texture.renderer.ImageRenderer;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import io.flutter.embedding.engine.plugins.FlutterPlugin;
 import io.flutter.plugin.common.MethodCall;
-import io.flutter.plugin.common.MethodChannel;
 import io.flutter.view.TextureRegistry;
 
-public abstract class FlutterTexturePlugin implements FlutterPlugin, MethodChannel.MethodCallHandler {
-
-    private Context context;
-    private MethodChannel channel;
-    private TextureRegistry textureRegistry;
-    private Map<Integer, ImageRenderer> rendererMap;
+public abstract class FlutterTexturePlugin extends AbstractFlutterTexturePlugin<NativeImage> {
 
     @Override
-    public void onAttachedToEngine(@NonNull FlutterPlugin.FlutterPluginBinding binding) {
-        rendererMap = new HashMap<>();
-        context = binding.getApplicationContext();
-        textureRegistry = binding.getTextureRegistry();
-        channel = new MethodChannel(binding.getBinaryMessenger(), getChannel());
-        channel.setMethodCallHandler(this);
-    }
-
-    public void onMethodCall(@NonNull MethodCall call, @NonNull MethodChannel.Result result) {
-        if (call.method.equals("load")) {
-            load(call, result);
-        } else {
-            result.notImplemented();
-        }
-    }
-
-    private void load(@NonNull MethodCall call, @NonNull MethodChannel.Result result) {
+    protected NativeImage getImageInfo(@NonNull MethodCall call) {
         NativeImage info = NativeImage.obtain();
         info.setSource(call.argument("resource"));
         Integer resourceType = call.argument("resourceType");
@@ -55,33 +29,21 @@ public abstract class FlutterTexturePlugin implements FlutterPlugin, MethodChann
         if (height != null) info.setHeight(height.intValue());
         Integer fit = call.argument("fit");
         if (fit != null) info.setFit(BoxFit.values()[fit]);
-
-        Integer textureId = call.argument("textureId");
-        // TODO 支持OPENGL ES渲染
-        ImageRenderer renderer;
-        if (textureId == null || !rendererMap.containsKey(textureId)) {
-            TextureRegistry.SurfaceTextureEntry entry = textureRegistry.createSurfaceTexture();
-            renderer = getImageRenderer(context, entry, info.getSourceType());
-            rendererMap.put((int) entry.id(), renderer);
-        } else {
-            renderer = rendererMap.get(textureId);
-        }
-        if (renderer != null) renderer.render(info, result);
+        return info;
     }
 
     @Override
-    public void onDetachedFromEngine(@NonNull FlutterPlugin.FlutterPluginBinding binding) {
-        channel.setMethodCallHandler(null);
-        for(Map.Entry<Integer, ImageRenderer> entry : rendererMap.entrySet())
-            entry.getValue().release();
-        rendererMap.clear();
+    protected ImageRenderer<NativeImage> getImageRenderer(
+            Context context,
+            TextureRegistry.SurfaceTextureEntry entry,
+            NativeImage info
+    ) {
+        return getImageRenderer(context, entry, info.getSourceType());
     }
 
-    protected abstract ImageRenderer getImageRenderer(
+    protected abstract ImageRenderer<NativeImage> getImageRenderer(
             Context context,
             TextureRegistry.SurfaceTextureEntry entry,
             SourceType sourceType
     );
-
-    protected abstract String getChannel();
 }

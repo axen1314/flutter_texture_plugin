@@ -13,22 +13,22 @@ import java.util.concurrent.Executors;
 import io.flutter.plugin.common.MethodChannel;
 import io.flutter.view.TextureRegistry;
 
-public abstract class AbstractImageRenderer<T> implements ImageRenderer {
+public abstract class AbstractImageRenderer<T, R> implements ImageRenderer<R> {
     protected TextureRegistry.SurfaceTextureEntry textureEntry;
-    private final ImageProvider<T> provider;
+    private final ImageProvider<T, R> provider;
 
     private final Executor executor = Executors.newSingleThreadExecutor();
     private final Handler handler = new Handler(Looper.getMainLooper());
 
     public AbstractImageRenderer(
             TextureRegistry.SurfaceTextureEntry textureEntry,
-            ImageProvider<T> provider
+            ImageProvider<T, R> provider
     ) {
         this.textureEntry = textureEntry;
         this.provider = provider;
     }
 
-    public void render(final NativeImage info, final MethodChannel.Result result) {
+    public void render(final R info, final MethodChannel.Result result) {
         executor.execute(new Runnable() {
             @Override
             public void run() {
@@ -39,8 +39,7 @@ public abstract class AbstractImageRenderer<T> implements ImageRenderer {
                     onFail(e);
                     postError(result, e.getMessage());
                 } finally {
-                    onComplete();
-                    info.recycle();
+                    onComplete(info);
                 }
             }
         });
@@ -84,10 +83,10 @@ public abstract class AbstractImageRenderer<T> implements ImageRenderer {
         });
     }
 
-    protected void onComplete() {}
+    protected void onComplete(R info) {}
 
     protected void onFail(Exception error) {}
 
-    protected abstract void onDraw(T image, NativeImage info, MethodChannel.Result result);
+    protected abstract void onDraw(T image, R info, MethodChannel.Result result);
 
 }

@@ -20,7 +20,7 @@ public class SurfaceBitmapRenderer extends SurfaceImageRenderer<Bitmap> {
 
     public SurfaceBitmapRenderer(
             TextureRegistry.SurfaceTextureEntry textureEntry, 
-            ImageProvider<Bitmap> provider
+            ImageProvider<Bitmap, NativeImage> provider
     ) {
         super(textureEntry, provider);
     }

@@ -16,7 +16,7 @@ public class SurfaceDrawableRenderer extends SurfaceImageRenderer<Drawable>{
 
     public SurfaceDrawableRenderer(
             TextureRegistry.SurfaceTextureEntry textureEntry,
-            ImageProvider<Drawable> provider
+            ImageProvider<Drawable, NativeImage> provider
     ) {
         super(textureEntry, provider);
     }

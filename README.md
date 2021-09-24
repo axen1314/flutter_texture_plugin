@@ -14,7 +14,7 @@ rootProject.allprojects {
 }
 
 dependencies {
-    implementation 'com.github.axen1314:flutter_texture_plugin:v1.0.0'
+    implementation 'com.github.axen1314:flutter_texture_plugin:v1.0.2'
 }
 
 ```
@@ -96,6 +96,47 @@ public class GlideProvider implements ImageProvider<Bitmap> {
 | fit | BoxFit | 纹理缩放模式，FILL: 填充 COVER: 覆盖 CONTAIN: 包含 FIT_WIDTH: 宽度自适应 FIT_HEIGHT: 高度自适应 SCALE_DOWN: 缩放 NONE: 无 |
 
 从Flutter层传入纹理信息时，参数名和参数类型需要与文档描述一致
+
+# 自定义纹理信息
+
+如果需要使用自定义实体类作为图片信息载体，请继承`AbstractFlutterTexturePlugin`类
+
+```java
+public class ExamplePlugin extends AbstractFlutterTexturePlugin<CustomImage> implements FlutterPlugin {
+    @Override
+    protected ImageRenderer getImageRenderer(
+            Context context, 
+            TextureRegistry.SurfaceTextureEntry entry,
+            CustomImage info
+    ) {
+        return new CustomRenderer(entry);
+    }
+
+    @Override
+    protected String getChannel() {
+        return "org.axen.flutter/example";
+    }
+
+    @Override
+    protected CustomImage getImageInfo(@NonNull MethodCall call) {
+        CustomImage info = CustomImage.obtain();
+        info.setSource(call.argument("resource"));
+        Double scaleRatio = call.argument("scaleRatio");
+        if (scaleRatio != null) info.setScaleRatio(scaleRatio);
+        Double width = call.argument("width");
+        if (width != null) info.setWidth(width.intValue());
+        Double height = call.argument("height");
+        if (height != null) info.setHeight(height.intValue());
+        Integer fit = call.argument("fit");
+        if (fit != null) info.setFit(BoxFit.values()[fit]);
+        return info;
+    }
+}
+```
+
+`AbstractFlutterTexturePlugin`类比`FlutterTexturePlugin`多出一个需要实现的方法--`getImageInfo`，这个参数的作用在于将Flutter层传入的数据转换为实体类
+
+事实上，`FlutterTexturePlugin`也是继承自`AbstractFlutterTexturePlugin`类，并以`NativeImage`作为实体类
 
 # 应用
 
