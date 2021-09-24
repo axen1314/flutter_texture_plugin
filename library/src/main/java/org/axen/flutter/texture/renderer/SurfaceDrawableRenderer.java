@@ -34,10 +34,4 @@ public class SurfaceDrawableRenderer extends SurfaceImageRenderer<Drawable>{
         image.draw(canvas);
         surface.unlockCanvasAndPost(canvas);
     }
-
-    @Override
-    protected Rect calculateImageSrcRect(Rect imageSize, NativeImage info, Rect dstRect) {
-        // 不用计算绘制区域
-        return null;
-    }
 }
