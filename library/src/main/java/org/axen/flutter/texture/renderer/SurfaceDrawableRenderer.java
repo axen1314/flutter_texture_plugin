@@ -27,7 +27,7 @@ public class SurfaceDrawableRenderer extends SurfaceImageRenderer<Drawable>{
     }
 
     @Override
-    public void draw(final Surface surface, final Drawable image, Rect srcRect) {
+    public void draw(final Surface surface, final Drawable image) {
         Canvas canvas = surface.lockCanvas(null);
         // Fixed: PNG图片背景默认显示为白色的问题
         canvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);

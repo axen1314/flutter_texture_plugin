@@ -13,6 +13,7 @@ import android.view.Surface;
 import androidx.annotation.VisibleForTesting;
 
 import org.axen.flutter.texture.constant.BoxFit;
+import org.axen.flutter.texture.entity.ImageResult;
 import org.axen.flutter.texture.entity.NativeImage;
 import org.axen.flutter.texture.provider.ImageProvider;
 import org.axen.flutter.texture.utils.NativeImageUtils;
@@ -35,17 +36,12 @@ public class SurfaceBitmapRenderer extends SurfaceImageRenderer<Bitmap> {
 
     @Override
     @VisibleForTesting(otherwise = PROTECTED)
-    public void draw(Surface surface, Bitmap image, Rect srcRect) {
+    public void draw(Surface surface, Bitmap image) {
         Rect dstRect = new Rect(0, 0, image.getWidth(), image.getHeight());
         Canvas canvas = surface.lockCanvas(null);
         // Fixed: PNG图片背景默认显示为白色的问题
         canvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
-        canvas.drawBitmap(image, srcRect, dstRect, null); //图片的绘制
+        canvas.drawBitmap(image, null, dstRect, null); //图片的绘制
         surface.unlockCanvasAndPost(canvas);
-    }
-
-    @Override
-    protected Rect calculateImageSrcRect(Rect imageSize, NativeImage info, Rect dstRect) {
-        return NativeImageUtils.calculateImageSrcRect(imageSize, info, dstRect);
     }
 }

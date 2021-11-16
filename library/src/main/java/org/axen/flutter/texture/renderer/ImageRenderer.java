@@ -1,10 +1,7 @@
 package org.axen.flutter.texture.renderer;
 
-import org.axen.flutter.texture.entity.NativeImage;
-
-import io.flutter.plugin.common.MethodChannel;
+import org.axen.flutter.texture.entity.ImageResult;
 
 public interface ImageRenderer<T> {
-    void render(T info, MethodChannel.Result result);
-    void release();
+    ImageResult render(T info) throws Throwable;
 }

@@ -17,8 +17,8 @@ public abstract class FlutterTexturePlugin extends AbstractFlutterTexturePlugin<
     @Override
     protected NativeImage getImageInfo(@NonNull MethodCall call) {
         NativeImage info = NativeImage.obtain();
-        info.setSource(call.argument("resource"));
-        Integer resourceType = call.argument("resourceType");
+        info.setSource(call.argument("source"));
+        Integer resourceType = call.argument("sourceType");
         if (resourceType != null)
             info.setSourceType(SourceType.values()[resourceType]);
         Double scaleRatio = call.argument("scaleRatio");
