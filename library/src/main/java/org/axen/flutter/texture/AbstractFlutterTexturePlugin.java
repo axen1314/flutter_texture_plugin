@@ -9,8 +9,8 @@ import androidx.annotation.NonNull;
 
 import org.axen.flutter.texture.entity.ImageResult;
 import org.axen.flutter.texture.renderer.ImageRenderer;
+import org.axen.flutter.texture.utils.MD5Utils;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
@@ -24,22 +24,27 @@ public abstract class AbstractFlutterTexturePlugin<T> implements FlutterPlugin, 
     private Context context;
     private MethodChannel channel;
     private TextureRegistry textureRegistry;
-    private LruCache<Integer, ImageResult> imageResultLruCache;
+    private LruCache<String, ImageResult> imageResultLruCache;
 
     private final Executor executor = Executors.newSingleThreadExecutor();
     private final Handler handler = new Handler(Looper.getMainLooper());
 
     @Override
     public void onAttachedToEngine(@NonNull FlutterPlugin.FlutterPluginBinding binding) {
-        imageResultLruCache = new LruCache<Integer, ImageResult>(16) {
+        imageResultLruCache = new LruCache<String, ImageResult>(16) {
             @Override
             protected void entryRemoved(
                     boolean evicted,
-                    Integer key,
+                    String key,
                     ImageResult oldValue,
                     ImageResult newValue
             ) {
-                oldValue.release();
+                handler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        oldValue.release();
+                    }
+                });
             }
         };
         context = binding.getApplicationContext();
@@ -57,29 +62,33 @@ public abstract class AbstractFlutterTexturePlugin<T> implements FlutterPlugin, 
     }
 
     private void load(@NonNull MethodCall call, @NonNull MethodChannel.Result result) {
-        T info = getImageInfo(call);
-        Integer textureId = call.argument("textureId");
-        if (textureId != null) {
-            ImageResult imageResult = imageResultLruCache.get(textureId);
+        String source = call.argument("source");
+        if (source == null || source.isEmpty()) {
+            postError(result, "Source is null or empty!");
+        } else {
+            final String md5 = MD5Utils.stringToMD5(source);
+            ImageResult imageResult = imageResultLruCache.get(md5);
             if (imageResult != null)  {
                 postSuccess(result, imageResult.toMap());
-                return;
+            } else {
+                final T info = getImageInfo(call);
+                TextureRegistry.SurfaceTextureEntry entry = textureRegistry.createSurfaceTexture();
+                ImageRenderer<T> renderer = getImageRenderer(context, entry, info);
+                executor.execute(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            ImageResult imageResult = renderer.render(info);
+                            imageResultLruCache.put(md5, imageResult);
+                            postSuccess(result, imageResult.toMap());
+                        } catch (Throwable e) {
+                            postError(result, e.getMessage());
+                        }
+                    }
+                });
             }
+
         }
-        TextureRegistry.SurfaceTextureEntry entry = textureRegistry.createSurfaceTexture();
-        ImageRenderer<T> renderer = getImageRenderer(context, entry, info);
-        executor.execute(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    ImageResult imageResult = renderer.render(info);
-                    imageResultLruCache.put((int) entry.id(), imageResult);
-                    postSuccess(result, imageResult.toMap());
-                } catch (Throwable e) {
-                    postError(result, e.getMessage());
-                }
-            }
-        });
     }
 
     @Override
