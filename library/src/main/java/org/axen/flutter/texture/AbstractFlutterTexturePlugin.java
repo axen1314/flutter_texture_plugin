@@ -29,9 +29,6 @@ import io.flutter.plugin.common.MethodChannel;
 import io.flutter.view.TextureRegistry;
 
 public abstract class AbstractFlutterTexturePlugin<T> implements FlutterPlugin, MethodChannel.MethodCallHandler {
-    private static final int MESSAGE_RESULT_SUCCESS = 0;
-    private static final int MESSAGE_RESULT_FAIL = 1;
-    private static final int MESSAGE_ENTRY_REMOVE = 2;
 
 
     private Context context;
