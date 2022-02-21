@@ -92,7 +92,7 @@ public abstract class AbstractFlutterTexturePlugin<T> implements FlutterPlugin, 
                         @Override
                         public void run() {
                             try {
-                                ImageResult imageResult = renderer.render(info);
+                                ImageResult imageResult = renderer.render(info, handler);
                                 imageResultLruCache.put(md5, imageResult);
                                 Map<String, Object> imageResultMap = imageResult.toMap();
                                 Queue<MethodChannel.Result> pending = pendingResults.get(md5);

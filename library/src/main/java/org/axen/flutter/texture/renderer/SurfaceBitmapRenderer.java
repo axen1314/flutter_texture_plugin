@@ -18,6 +18,8 @@ import org.axen.flutter.texture.entity.NativeImage;
 import org.axen.flutter.texture.provider.ImageProvider;
 import org.axen.flutter.texture.utils.NativeImageUtils;
 
+import android.os.Handler;
+
 import io.flutter.view.TextureRegistry;
 
 public class SurfaceBitmapRenderer extends SurfaceImageRenderer<Bitmap> {
@@ -36,7 +38,7 @@ public class SurfaceBitmapRenderer extends SurfaceImageRenderer<Bitmap> {
 
     @Override
     @VisibleForTesting(otherwise = PROTECTED)
-    public void draw(Surface surface, Bitmap image) {
+    public void draw(Surface surface, Bitmap image, Handler handler) {
         Rect dstRect = new Rect(0, 0, image.getWidth(), image.getHeight());
         Canvas canvas = surface.lockCanvas(null);
         // Fixed: PNG图片背景默认显示为白色的问题

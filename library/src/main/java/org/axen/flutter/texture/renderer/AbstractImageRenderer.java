@@ -1,5 +1,7 @@
 package org.axen.flutter.texture.renderer;
 
+import android.os.Handler;
+
 import org.axen.flutter.texture.entity.ImageResult;
 import org.axen.flutter.texture.provider.ImageProvider;
 
@@ -18,11 +20,20 @@ public abstract class AbstractImageRenderer<T, R> implements ImageRenderer<R> {
     }
 
     @Override
-    public ImageResult render(final R info) throws Throwable {
+    public ImageResult render(final R info, Handler handler) throws Throwable {
         T image = provider.provide(info);
-        return onDraw(image, info);
+        return onDraw(image, info, handler);
     }
 
-    protected abstract ImageResult onDraw(T image, R info) throws Throwable;
+    protected abstract ImageResult onDraw(T image, R info, Handler handler) throws Throwable;
 
+    @Override
+    public void release() {
+        textureEntry.release();
+    }
+
+    @Override
+    public long id() {
+        return textureEntry.id();
+    }
 }
