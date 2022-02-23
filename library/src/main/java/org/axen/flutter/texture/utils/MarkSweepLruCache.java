@@ -70,10 +70,11 @@ public class MarkSweepLruCache<K, V> {
         }
 
         synchronized (this) {
-            if (entity.hitCount == 0) {
+            if (entity.hitCount == 1) {
                 MarkSweepEntity<V> remove = map.remove(key);
                 if (remove != null) {
                     entryRemoved(key, remove.value);
+                    remove.hitCount--;
                     return remove.value;
                 }
                 return null;

@@ -74,6 +74,7 @@ public abstract class AbstractFlutterTexturePlugin<T> implements FlutterPlugin, 
             postError(result, "Source is null or empty!");
         } else {
             final String md5 = MD5Utils.stringToMD5(source);
+            // Be careful to use it which will increase value's hit counts.
             ImageResult imageResult = imageResultLruCache.get(md5);
             if (imageResult != null) {
                 postSuccess(result, imageResult.toMap());
@@ -97,6 +98,7 @@ public abstract class AbstractFlutterTexturePlugin<T> implements FlutterPlugin, 
                                 Map<String, Object> imageResultMap = imageResult.toMap();
                                 Queue<MethodChannel.Result> pending = pendingResults.get(md5);
                                 while (pending != null && !pending.isEmpty()) {
+                                    imageResultLruCache.get(md5);// increase hit counts
                                     MethodChannel.Result rs = pending.poll();
                                     postSuccess(rs, imageResultMap);
                                 }
@@ -123,10 +125,7 @@ public abstract class AbstractFlutterTexturePlugin<T> implements FlutterPlugin, 
             postError(result, "Source is null or empty!");
         } else {
             final String md5 = MD5Utils.stringToMD5(source);
-            ImageResult imageResult = imageResultLruCache.get(md5);
-            if (imageResult != null) {
-                imageResultLruCache.remove(md5);
-            }
+            imageResultLruCache.remove(md5);
         }
     }
 

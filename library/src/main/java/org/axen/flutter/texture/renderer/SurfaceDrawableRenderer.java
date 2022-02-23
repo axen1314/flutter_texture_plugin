@@ -36,29 +36,29 @@ public class SurfaceDrawableRenderer extends SurfaceImageRenderer<Drawable> {
 
     @Override
     public void draw(final Surface surface, final Drawable image, Handler handler) {
+        // play drawable animation;
+        // keep this reference or JVM might recycle it.
+        mCallback = new Drawable.Callback() {
+            @Override
+            public void invalidateDrawable(@NonNull Drawable who) {
+                drawImage(surface, who);
+            }
+
+            @Override
+            public void scheduleDrawable(@NonNull Drawable who, @NonNull Runnable what, long when) {
+                handler.postAtTime(what, who, when);
+            }
+
+            @Override
+            public void unscheduleDrawable(@NonNull Drawable who, @NonNull Runnable what) {
+                handler.removeCallbacks(what, who);
+            }
+        };
+        image.setCallback(mCallback);
         if (image instanceof Animatable) {
-            // play drawable animation;
-            // keep this reference or JVM might recycle it.
-            mCallback = new Drawable.Callback() {
-                @Override
-                public void invalidateDrawable(@NonNull Drawable who) {
-                    drawImage(surface, who);
-                }
-
-                @Override
-                public void scheduleDrawable(@NonNull Drawable who, @NonNull Runnable what, long when) {
-                    handler.postAtTime(what, who, when);
-                }
-
-                @Override
-                public void unscheduleDrawable(@NonNull Drawable who, @NonNull Runnable what) {
-                    handler.removeCallbacks(what, who);
-                }
-            };
-            image.setCallback(mCallback);
             ((Animatable) image).start();
         } else {
-            drawImage(surface, image);
+            image.invalidateSelf();
         }
     }
 
