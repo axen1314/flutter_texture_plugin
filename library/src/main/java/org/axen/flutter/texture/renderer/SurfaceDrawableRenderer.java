@@ -41,7 +41,11 @@ public class SurfaceDrawableRenderer extends SurfaceImageRenderer<Drawable> {
         mCallback = new Drawable.Callback() {
             @Override
             public void invalidateDrawable(@NonNull Drawable who) {
-                drawImage(surface, who);
+                handler.post(() -> {
+                    if (surface.isValid()) {
+                        drawImage(surface, who);
+                    }
+                });
             }
 
             @Override
