@@ -30,7 +30,7 @@ android {
 }
 
 dependencies {
-    compileOnly 'io.flutter:flutter_embedding_debug:1.0.0-0fdb562ac8068ce3dda6b69aca3f355f4d1d2718'
+    compileOnly 'io.flutter:flutter_embedding_debug:1.0.0-d3ea636dc5d16b56819f3266241e1f708979c233'
 }
 
 afterEvaluate {
