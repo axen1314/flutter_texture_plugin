@@ -14,7 +14,7 @@ rootProject.allprojects {
 }
 
 dependencies {
-    implementation 'com.github.axen1314:flutter_texture_plugin:v1.1.0'
+    implementation 'com.github.axen1314:flutter_texture_plugin:v1.1.1'
 }
 
 ```

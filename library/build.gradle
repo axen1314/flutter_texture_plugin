@@ -2,7 +2,7 @@ apply plugin: 'com.android.library'
 apply plugin: 'maven-publish'
 
 group = 'com.github.axen1314'
-version = 'v1.1.0'
+version = 'v1.1.1'
 
 android {
     compileSdkVersion 31
@@ -11,7 +11,7 @@ android {
         minSdkVersion 16
         targetSdkVersion 31
         versionCode 5
-        versionName "1.1.0"
+        versionName "1.1.1"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles "consumer-rules.pro"
@@ -41,7 +41,7 @@ afterEvaluate {
                 from components.release
                 groupId = 'com.github.axen1314'
                 artifactId = 'flutter_texture_plugin'
-                version = 'v1.1.0'
+                version = 'v1.1.1'
             }
         }
     }

@@ -21,6 +21,7 @@ import io.flutter.view.TextureRegistry;
 
 public class SurfaceDrawableRenderer extends SurfaceImageRenderer<Drawable> {
     private Drawable.Callback mCallback;
+    private Drawable mCacheDrawable;
 
     public SurfaceDrawableRenderer(
             TextureRegistry.SurfaceTextureEntry textureEntry,
@@ -36,8 +37,10 @@ public class SurfaceDrawableRenderer extends SurfaceImageRenderer<Drawable> {
 
     @Override
     public void draw(final Surface surface, final Drawable image, Handler handler) {
+        if (mCacheDrawable != null) { clearCache(); }
         // play drawable animation;
         // keep this reference or JVM might recycle it.
+        mCacheDrawable = image;
         mCallback = new Drawable.Callback() {
             @Override
             public void invalidateDrawable(@NonNull Drawable who) {
@@ -74,9 +77,15 @@ public class SurfaceDrawableRenderer extends SurfaceImageRenderer<Drawable> {
         surface.unlockCanvasAndPost(canvas);
     }
 
+    private void clearCache() {
+        mCacheDrawable.setCallback(null);
+        mCacheDrawable = null;
+        mCallback = null;
+    }
+
     @Override
     public void release() {
         super.release();
-        mCallback = null;
+        clearCache();
     }
 }
